@@ -25,7 +25,7 @@ func main() {
 	// controllers.Register(db)
 	// controllers.Handle(&models.MyController{})
 
-	app.Handle("GET", "/check_user", func(ctx context.Context) {
+	app.Handle("GET", "/get_user", func(ctx context.Context) {
 		p := ctx.URLParam("id")
 		fmt.Println(p)
 	})
@@ -35,7 +35,8 @@ func main() {
 		fmt.Println(p)
 	})
 
-	app.Handle("GET", "/test", routes.GetAllUser)
+	app.Handle("POST", "/insert_user", routes.AddUser)
+	app.Handle("GET", "/get_all_users", routes.GetAllUser)
 
-	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
+	app.Run(iris.Addr(":8081"), iris.WithoutServerError(iris.ErrServerClosed))
 }
