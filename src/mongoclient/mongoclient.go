@@ -13,7 +13,7 @@ type MongoController struct {
 
 // MongoSession get session mongodb
 func MongoSession() (*mgo.Database, *mgo.Session) {
-	session, err := mgo.Dial("mongodb://root:123456@localhost:27017")
+	session, err := mgo.Dial("localhost:27017")
 	if nil != err {
 		fmt.Println("error")
 		panic(err)

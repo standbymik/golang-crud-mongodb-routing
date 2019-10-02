@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/kataras/iris/context"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // GetAllUser func for return all user
@@ -46,4 +47,29 @@ func AddUser(ctx context.Context) {
 	}
 
 	ctx.JSON(context.Map{"success": true})
+}
+
+// GetUser return one user
+func GetUser(ctx context.Context) {
+	success := true
+	name := ctx.URLParam("name")
+
+	user := models.User{}
+
+	db, session := mongoclient.MongoSession()
+	defer session.Close()
+
+	err := db.C("users").Find(bson.M{"name": name}).One(&user)
+
+	if err != nil {
+		success = false
+		fmt.Println(err)
+	}
+
+	if success == true {
+		ctx.JSON(context.Map{"data": user, "success": success})
+	} else {
+		ctx.JSON(context.Map{"success": success})
+	}
+
 }
