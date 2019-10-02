@@ -51,7 +51,6 @@ func AddUser(ctx context.Context) {
 
 // GetUser return one user
 func GetUser(ctx context.Context) {
-	success := true
 	name := ctx.URLParam("name")
 
 	user := models.User{}
@@ -62,14 +61,9 @@ func GetUser(ctx context.Context) {
 	err := db.C("users").Find(bson.M{"name": name}).One(&user)
 
 	if err != nil {
-		success = false
-		fmt.Println(err)
-	}
-
-	if success == true {
-		ctx.JSON(context.Map{"data": user, "success": success})
+		ctx.JSON(context.Map{"success": false})
 	} else {
-		ctx.JSON(context.Map{"success": success})
+		ctx.JSON(context.Map{"data": user, "success": false})
 	}
 
 }
