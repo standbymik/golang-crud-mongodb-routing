@@ -67,3 +67,24 @@ func GetUser(ctx context.Context) {
 	}
 
 }
+
+//UpdateUser update by user
+func UpdateUser(ctx context.Context) {
+
+	name := ctx.PostValue("name")
+	fmt.Println(name)
+	db, session := mongoclient.MongoSession()
+	defer session.Close()
+
+	user := make(map[string]string)
+	fmt.Println(user)
+
+	err := db.C("users").Find(bson.M{"name": name}).One(&user)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	ctx.JSON(context.Map{"result": user})
+
+}
