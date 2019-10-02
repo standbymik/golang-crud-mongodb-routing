@@ -37,6 +37,7 @@ func main() {
 
 	app.Handle("POST", "/insert_user", routes.AddUser)
 	app.Handle("GET", "/get_all_users", routes.GetAllUser)
+	app.Handle("GET", "/get_user", routes.GetUser)
 
 	app.Run(iris.Addr(":8081"), iris.WithoutServerError(iris.ErrServerClosed))
 }
