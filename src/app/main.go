@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"models"
 	"routes"
 
 	"github.com/kataras/iris"
@@ -31,6 +32,16 @@ func main() {
 	app.Handle("GET", "/get_all_users", routes.GetAllUser)
 	app.Handle("GET", "/get_user", routes.GetUser)
 	app.Handle("POST", "/update_user", routes.UpdateUser)
+	app.Handle("POST", "/test", func(ctx context.Context) {
+		user := models.User{}
+		ctx.ReadForm(&user)
+		ctx.JSON(context.Map{"result": user})
+	})
+	app.Handle("GET", "/test2", func(ctx context.Context) {
+		user := models.User{}
+		ctx.ReadQuery(&user)
+		ctx.JSON(context.Map{"result": user})
+	})
 
 	app.Run(iris.Addr(":8081"), iris.WithoutServerError(iris.ErrServerClosed))
 }
