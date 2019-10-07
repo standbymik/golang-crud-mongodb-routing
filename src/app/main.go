@@ -32,6 +32,7 @@ func main() {
 	app.Handle("GET", "/get_all_users", routes.GetAllUser)
 	app.Handle("GET", "/get_user", routes.GetUser)
 	app.Handle("POST", "/update_user", routes.UpdateUser)
+	app.Handle("POST", "delete_user", routes.DeleteUser)
 	app.Handle("POST", "/test", func(ctx context.Context) {
 
 		user := models.User{}

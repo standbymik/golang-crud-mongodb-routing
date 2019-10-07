@@ -91,3 +91,22 @@ func UpdateUser(ctx context.Context) {
 	}
 
 }
+
+//DeleteUser for delete by user
+func DeleteUser(ctx context.Context) {
+	user := models.User{}
+	ctx.ReadForm(&user)
+
+	db, session := mongoclient.MongoSession()
+	defer session.Close()
+
+	where := bson.M{"name": user.Name}
+	err := db.C("users").Find(where).One(nil)
+	if err != nil {
+		ctx.JSON(context.Map{"result": "not found"})
+	} else {
+		where := bson.M{"name": user.Name}
+		db.C("users").Remove(where)
+		ctx.JSON(context.Map{"success": true})
+	}
+}
