@@ -33,6 +33,7 @@ func main() {
 	app.Handle("GET", "/get_user", routes.GetUser)
 	app.Handle("POST", "/update_user", routes.UpdateUser)
 	app.Handle("POST", "/test", func(ctx context.Context) {
+
 		user := models.User{}
 		ctx.ReadForm(&user)
 		ctx.JSON(context.Map{"result": user})

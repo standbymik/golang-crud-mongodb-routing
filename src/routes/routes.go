@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"models"
 	"mongoclient"
+	"strconv"
 	"time"
 
 	"github.com/kataras/iris/context"
@@ -30,12 +31,6 @@ func AddUser(ctx context.Context) {
 
 	name1 := ctx.FormValue("name")
 	age := ctx.FormValue("age")
-
-	// update := bson.M{
-	// 	"name":         name,
-	// 	"age":          age,
-	// 	"created_time": time,
-	// }
 
 	update := models.User{Name: name1, Age: age, Createdtime: time.Now()}
 
@@ -72,19 +67,27 @@ func GetUser(ctx context.Context) {
 func UpdateUser(ctx context.Context) {
 
 	name := ctx.PostValue("name")
-	fmt.Println(name)
 	db, session := mongoclient.MongoSession()
 	defer session.Close()
 
-	user := make(map[string]string)
-	fmt.Println(user)
+	user := models.User{}
+	ctx.ReadForm(&user)
 
-	err := db.C("users").Find(bson.M{"name": name}).One(&user)
+	err := db.C("users").Find(bson.M{"name": name}).One(nil)
 
 	if err != nil {
 		fmt.Println(err)
+		ctx.JSON(context.Map{"result": "not found"})
+	} else {
+		where := bson.M{"name": user.Name}
+		age, _ := strconv.ParseInt(user.Age, 0, 0)
+		update := bson.M{"$set": bson.M{
+			"age":          age,
+			"created_time": time.Now(),
+		},
+		}
+		db.C("users").Update(where, update)
+		ctx.JSON(context.Map{"success": true, "result": user})
 	}
-
-	ctx.JSON(context.Map{"result": user})
 
 }
